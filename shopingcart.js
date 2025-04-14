@@ -1,44 +1,27 @@
-// // Utility function to handle button click
-// const handleBtnClick = (valId, isIncrement) => {
-//   const input = document.getElementById(valId);
-//   let value = parseFloat(input.value) || 0;
-//   value = isIncrement ? value + 1 : value - 1;
-
-//   if (value < 0) {
-//     return alert("Please add some number");
-//   }
-
-//   input.value = value;
-// };
-
-// // Event bindings using config
-// [
-//   { btnId: "mobileBtnPlus", valId: "mobileVal", isInc: true },
-//   { btnId: "mobileBtnMinus", valId: "mobileVal", isInc: false },
-//   { btnId: "caseBtnPlus", valId: "caseVal", isInc: true },
-//   { btnId: "caseBtnMinus", valId: "caseVal", isInc: false },
-// ].forEach(({ btnId, valId, isInc }) =>
-//   document
-//     .getElementById(btnId)
-//     ?.addEventListener("click", () => handleBtnClick(valId, isInc))
-// );
-
 //Mobile Btn handler
 const mobileBtnPlus = document.getElementById("mobileBtnPlus");
 const mobileBtnMinus = document.getElementById("mobileBtnMinus");
 
 mobileBtnPlus.addEventListener("click", () => {
   const mobileVal = document.getElementById("mobileVal").value;
-  const mobileValNum = parseFloat(mobileVal) + 1;
+  const mobileValNum = parseInt(mobileVal) + 1;
+  const mobilePriceSum = mobileValNum * 10;
+
   document.getElementById("mobileVal").value = mobileValNum;
+  document.getElementById("mobilePrice").innerText = mobilePriceSum;
+  calculateTotalPrice();
 });
 mobileBtnMinus.addEventListener("click", () => {
   const mobileVal = document.getElementById("mobileVal").value;
-  const mobileValNum = parseFloat(mobileVal) - 1;
-  if (mobileValNum < 0) {
-    alert("Please add some number");
+  const mobileValNum = parseInt(mobileVal) - 1;
+  const mobilePriceSum = mobileValNum * 10;
+
+  if (mobileValNum < 0 || mobilePriceSum < 0) {
+    alert("Please add number of quantity");
   } else {
     document.getElementById("mobileVal").value = mobileValNum;
+    document.getElementById("mobilePrice").innerText = mobilePriceSum;
+    calculateTotalPrice();
   }
 });
 //Case Btn handler
@@ -47,16 +30,40 @@ const caseBtnPlus = document.getElementById("caseBtnPlus");
 
 caseBtnPlus.addEventListener("click", () => {
   const caseVal = document.getElementById("caseVal").value;
-  const caseValNumber = parseFloat(caseVal) + 1;
+  const caseValNumber = parseInt(caseVal) + 1;
+  const casingPrice = caseValNumber * 5;
+  document.getElementById("casingPrice").innerText = casingPrice;
   document.getElementById("caseVal").value = caseValNumber;
+  calculateTotalPrice();
 });
 
 caseBtnMinus.addEventListener("click", () => {
-  const caseVal = document.getElementById("caseVal").value;
-  const caseValNumber = parseFloat(caseVal) - 1;
-  if (caseValNumber < 0) {
-    alert("Please add some number");
+  const caseVal = document.getElementById("caseVal");
+  const caseValNumber = parseInt(caseVal.value) - 1;
+  const casingPrice = caseValNumber * 5;
+
+  if (caseValNumber < 0 || casingPrice < 0) {
+    alert("Please add number of quantity");
   } else {
     document.getElementById("caseVal").value = caseValNumber;
+    document.getElementById("casingPrice").innerText = casingPrice;
+    calculateTotalPrice();
   }
 });
+// Total Price handler
+const calculateTotalPrice = () => {
+  const mobileVal = document.getElementById("mobileVal").value;
+  const mobileValNum = parseInt(mobileVal);
+
+  const caseVal = document.getElementById("caseVal").value;
+  const caseValNumber = parseInt(caseVal);
+
+  const totalPrice = mobileValNum * 10 + caseValNumber * 5;
+  document.getElementById("subTotalPrice").innerText = totalPrice;
+
+  const tax = Math.round(totalPrice * 0.15);
+  document.getElementById("taxPrice").innerText = tax;
+
+  const TotalPay = totalPrice + tax;
+  document.getElementById("totalPrice").innerText = TotalPay;
+};
