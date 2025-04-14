@@ -1,69 +1,47 @@
-//Mobile Btn handler
-const mobileBtnPlus = document.getElementById("mobileBtnPlus");
-const mobileBtnMinus = document.getElementById("mobileBtnMinus");
+// Utility to update item quantity and price
+const updateItem = (idPrefix, pricePerUnit, isIncrement, priceId) => {
+  const input = document.getElementById(`${idPrefix}Val`);
+  let quantity = parseInt(input.value) || 0;
+  quantity += isIncrement ? 1 : -1;
 
-mobileBtnPlus.addEventListener("click", () => {
-  const mobileVal = document.getElementById("mobileVal").value;
-  const mobileValNum = parseInt(mobileVal) + 1;
-  const mobilePriceSum = mobileValNum * 10;
-
-  document.getElementById("mobileVal").value = mobileValNum;
-  document.getElementById("mobilePrice").innerText = mobilePriceSum;
-  calculateTotalPrice();
-});
-mobileBtnMinus.addEventListener("click", () => {
-  const mobileVal = document.getElementById("mobileVal").value;
-  const mobileValNum = parseInt(mobileVal) - 1;
-  const mobilePriceSum = mobileValNum * 10;
-
-  if (mobileValNum < 0 || mobilePriceSum < 0) {
+  if (quantity < 0) {
     alert("Please add number of quantity");
-  } else {
-    document.getElementById("mobileVal").value = mobileValNum;
-    document.getElementById("mobilePrice").innerText = mobilePriceSum;
-    calculateTotalPrice();
+    return;
   }
-});
-//Case Btn handler
-const caseBtnMinus = document.getElementById("caseBtnMinus");
-const caseBtnPlus = document.getElementById("caseBtnPlus");
 
-caseBtnPlus.addEventListener("click", () => {
-  const caseVal = document.getElementById("caseVal").value;
-  const caseValNumber = parseInt(caseVal) + 1;
-  const casingPrice = caseValNumber * 5;
-  document.getElementById("casingPrice").innerText = casingPrice;
-  document.getElementById("caseVal").value = caseValNumber;
+  input.value = quantity;
+  document.getElementById(priceId).innerText = quantity * pricePerUnit;
   calculateTotalPrice();
-});
+};
+// Button event bindings
+document
+  .getElementById("mobileBtnPlus")
+  .addEventListener("click", () =>
+    updateItem("mobile", 10, true, "mobilePrice")
+  );
+document
+  .getElementById("mobileBtnMinus")
+  .addEventListener("click", () =>
+    updateItem("mobile", 10, false, "mobilePrice")
+  );
 
-caseBtnMinus.addEventListener("click", () => {
-  const caseVal = document.getElementById("caseVal");
-  const caseValNumber = parseInt(caseVal.value) - 1;
-  const casingPrice = caseValNumber * 5;
+document
+  .getElementById("caseBtnPlus")
+  .addEventListener("click", () => updateItem("case", 5, true, "casingPrice"));
+document
+  .getElementById("caseBtnMinus")
+  .addEventListener("click", () => updateItem("case", 5, false, "casingPrice"));
 
-  if (caseValNumber < 0 || casingPrice < 0) {
-    alert("Please add number of quantity");
-  } else {
-    document.getElementById("caseVal").value = caseValNumber;
-    document.getElementById("casingPrice").innerText = casingPrice;
-    calculateTotalPrice();
-  }
-});
-// Total Price handler
+// Total Price Calculator
 const calculateTotalPrice = () => {
-  const mobileVal = document.getElementById("mobileVal").value;
-  const mobileValNum = parseInt(mobileVal);
+  const mobileQty = parseInt(document.getElementById("mobileVal").value) || 0;
+  const caseQty = parseInt(document.getElementById("caseVal").value) || 0;
 
-  const caseVal = document.getElementById("caseVal").value;
-  const caseValNumber = parseInt(caseVal);
+  const subtotal = mobileQty * 10 + caseQty * 5;
+  const tax = Math.round(subtotal * 0.15);
+  const total = subtotal + tax;
 
-  const totalPrice = mobileValNum * 10 + caseValNumber * 5;
-  document.getElementById("subTotalPrice").innerText = totalPrice;
-
-  const tax = Math.round(totalPrice * 0.15);
+  document.getElementById("subTotalPrice").innerText = subtotal;
   document.getElementById("taxPrice").innerText = tax;
-
-  const TotalPay = totalPrice + tax;
-  document.getElementById("totalPrice").innerText = TotalPay;
+  document.getElementById("totalPrice").innerText = total;
 };
